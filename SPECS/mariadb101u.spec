@@ -966,7 +966,7 @@ EOF
 # hack for https://mariadb.atlassian.net/browse/MDEV-7454
 %{?with_init_sysv:LD_LIBRARY_PATH=$(pwd)/unittest/mytap }make test VERBOSE=1
 # hack to let 32- and 64-bit tests run concurrently on same build machine
-export MTR_PARALLEL=12
+export MTR_PARALLEL=4
 # builds might happen at the same host, avoid collision
 export MTR_BUILD_THREAD=%{__isa_bits}
 
