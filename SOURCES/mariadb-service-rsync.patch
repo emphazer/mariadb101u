@@ -1,0 +1,22 @@
+diff -up mariadb-10.0.17/scripts/mysql.service.in.scl-env-check mariadb-10.0.17/scripts/mysql.service.in
+--- mariadb-10.0.17/scripts/mysql.service.in.scl-env-check      2015-03-14 12:49:01.594320628 +0100
++++ mariadb-10.0.17/scripts/mysql.service.in    2015-03-14 16:06:28.582056853 +0100
+@@ -53,5 +53,18 @@
+ # Place temp files in a secure directory, not /tmp
+ PrivateTmp=true
+ 
++#KillMode=process
++#KillSignal=SIGTERM
++
++# Don't want to see an automated SIGKILL ever
++#SendSIGKILL=no
++
++# Restart crashed server only, on-failure would also restart, for example, when
++# my.cnf contains unknown option
++Restart=on-abort
++RestartSec=5s
++
++UMask=007
++
+ [Install]
+ WantedBy=multi-user.target

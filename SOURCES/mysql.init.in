@@ -7,7 +7,7 @@
 # description:	MySQL database server.
 # processname: mysqld
 # config: @sysconfdir@/my.cnf
-# pidfile: /var/run/@DAEMON_NAME@/@DAEMON_NAME@.pid
+# pidfile: /var/run/@DAEMON_NAME@/@DAEMON_NO_PREFIX@.pid
 ### BEGIN INIT INFO
 # Provides: mysqld
 # Required-Start: $local_fs $remote_fs $network $named $syslog $time
@@ -60,7 +60,7 @@ start(){
 	    MYSQLDRUNNING=1
 	fi
     fi
-    RESPONSE=`@bindir@/mysqladmin --socket="$socketfile" --user=UNKNOWN_MYSQL_USER ping 2>&1`
+    RESPONSE=`@bindir@/mysqladmin --no-defaults --socket="$socketfile" --user=UNKNOWN_MYSQL_USER ping 2>&1`
     if [ $MYSQLDRUNNING = 1 ] && [ $? = 0 ]; then
 	# already running, do nothing
 	action $"Starting $prog: " /bin/true
