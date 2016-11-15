@@ -14,8 +14,8 @@
 %global check_testsuite 0
 
 # In f20+ use unversioned docdirs, otherwise the old versioned one
-%global _pkgdocdirname %{pkg_name}%{!?_pkgdocdir:-%{version}}
-%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{pkg_name}-%{version}}
+%global _pkgdocdirname %{name}%{!?_pkgdocdir:-%{version}}
+%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
 
 # Use Full RELRO for all binaries (RHBZ#1092548)
 %global _hardened_build 1
@@ -155,7 +155,7 @@
 # Make long macros shorter
 %global sameevr   %{epoch}:%{version}-%{release}
 %global compatver 10.1
-%global bugfixver 18
+%global bugfixver 19
 
 %if 0%{?scl:1}
 %global scl_upper %{lua:print(string.upper(string.gsub(rpm.expand("%{scl}"), "-", "_")))}
@@ -163,7 +163,7 @@
 
 Name:             %{?scl_prefix}mariadb
 Version:          %{compatver}.%{bugfixver}
-Release:          11%{?with_debug:.debug}%{?dist}
+Release:          13%{?with_debug:.debug}%{?dist}
 Epoch:            1
 
 Summary:          A community developed branch of MySQL
@@ -296,6 +296,9 @@ Provides:         mysql-compat-client%{?_isa} = %{sameevr}
 %filter_provides_in -P (%{_datadir}/(mysql|mysql-test)/.*|%{_libdir}/mysql/plugin/.*\.so)
 %filter_setup
 %endif
+
+# Define license macro if not present
+%{!?_licensedir:%global license %doc}
 
 %description
 MariaDB is a community developed branch of MySQL.
@@ -884,6 +887,7 @@ rm -f %{buildroot}%{_sysconfdir}/logrotate.d/mysql
 # remove solaris files
 rm -rf %{buildroot}%{_datadir}/%{pkg_name}/solaris/
 
+
 %if %{without clibrary}
 unlink %{buildroot}%{_libdir}/mysql/libmysqlclient.so
 unlink %{buildroot}%{_libdir}/mysql/libmysqlclient_r.so
@@ -966,7 +970,7 @@ EOF
 # hack for https://mariadb.atlassian.net/browse/MDEV-7454
 %{?with_init_sysv:LD_LIBRARY_PATH=$(pwd)/unittest/mytap }make test VERBOSE=1
 # hack to let 32- and 64-bit tests run concurrently on same build machine
-export MTR_PARALLEL=4
+export MTR_PARALLEL=8
 # builds might happen at the same host, avoid collision
 export MTR_BUILD_THREAD=%{__isa_bits}
 
